@@ -12,7 +12,7 @@ body {
   align-items: center;
   height: 100vh;
   overflow: hidden;
-  touch-action: none;  /* prevents annoying scrolling on mobile */
+  touch-action: none;  /* prevents  extermely annoying scrolling on mobile */
 }
 canvas {
   background: radial-gradient(circle at center, #1e1e1e, #0a0a0a);
@@ -40,14 +40,14 @@ canvas {
 <canvas id="game"></canvas>
 
 <script>
-// Get the main elements - canvas and button
+// get the main elements - canvas and button //
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 const pauseButton = document.getElementById("pauseButton");
 
-let W, H;  // width and height variables
+let W, H;  // width and height variables //
 
-// This function handles screen resizing - keeps 4:3 aspect ratio
+// function handles screen resizing //
 function resize() {
   const aspectRatio = 4 / 3;
   const maxWidth = innerWidth * 0.9;
@@ -63,12 +63,12 @@ function resize() {
   
   canvas.width = W;
   canvas.height = H;
-  recalc();  // recalculate game dimensions
+  recalc();  // recalculate game dimensions //
 }
 
 addEventListener("resize", resize);
 
-// Game dimensions - these scale with canvas size
+// game dimensions, these scale with canvas size //
 let ballRadius, paddleWidth, paddleHeight, ballSpeedX, maxSpeedY, aiSpeed;
 
 function recalc() {
@@ -80,15 +80,15 @@ function recalc() {
   aiSpeed = H * 0.006;
 }
 
-resize();  // initial size calculation
+resize();  // initial size calculation //
 
-// Ball position and velocity
+// ball position and velocity //
 let ballX, ballY, ballDX, ballDY;
 
-// Paddle positions
+// paddle positions //
 let player1Y, player2Y;
 
-// Scores
+// scorez //
 let score1 = 0;
 let score2 = 0;
 
@@ -96,19 +96,19 @@ let isPaused = false;
 let gameWon = false;
 const WINNING_SCORE = 7;
 
-// Visual effects
+// le effects //
 let shakeAmount = 0;
 let flashAmount = 0;
 
-// Power-ups array
+// power-ups array //
 const powerUps = [];
 const POWERUP_SIZE = W * 0.03;
 
-// Audio context for sound effects
+// audio context for sound effects //
 const audioContext = new AudioContext();
 let isAudioUnlocked = false;
 
-// Need to unlock audio on first user interaction (browser requirement)
+// audio unlock //
 function unlockAudio() {
   if (!isAudioUnlocked) {
     audioContext.resume();
@@ -117,7 +117,7 @@ function unlockAudio() {
   }
 }
 
-// Simple sound effect generator
+// simple sound effect generator //
 function playTone(frequency, duration, volume) {
   const oscillator = audioContext.createOscillator();
   const gainNode = audioContext.createGain();
@@ -129,7 +129,7 @@ function playTone(frequency, duration, volume) {
   oscillator.stop(audioContext.currentTime + duration);
 }
 
-// Sound effects for different game events
+// sound effects for different game events //
 function playHitSound() {
   playTone(500, 0.05, 0.15);
 }
@@ -142,15 +142,15 @@ function playPowerUpSound() {
   playTone(900, 0.15, 0.25);
 }
 
-// Background music setup - just a low hum really
+
 const backgroundMusic = audioContext.createOscillator();
 const musicVolume = audioContext.createGain();
 backgroundMusic.type = "triangle";
 backgroundMusic.frequency.value = 110;
-musicVolume.gain.value = 0.04;  // Keep it subtle
+musicVolume.gain.value = 0.04;  
 backgroundMusic.connect(musicVolume).connect(audioContext.destination);
 
-// Reset ball to center and give it initial velocity
+
 function resetBall(direction) {
   ballX = W / 2;
   ballY = H / 2;
@@ -158,20 +158,20 @@ function resetBall(direction) {
   ballDY = (Math.random() * 2 - 1) * maxSpeedY * 0.6;
 }
 
-// Start a fresh game
+// Start a fresh game //
 function resetGame() {
   score1 = 0;
   score2 = 0;
   gameWon = false;
   player1Y = H / 2 - paddleHeight / 2;
   player2Y = H / 2 - paddleHeight / 2;
-  powerUps.length = 0;  // Clear all power-ups
+  powerUps.length = 0;  // should be obvious //
   resetBall(Math.random() > 0.5 ? 1 : -1);
 }
 
 resetGame();
 
-// Spawn a random power-up
+// spawn a random power-up //
 function spawnPowerUp() {
   let type;
   const rand = Math.random();
@@ -191,7 +191,7 @@ function spawnPowerUp() {
   });
 }
 
-// Randomly spawn power-ups every 6 seconds
+
 setInterval(() => {
   if (!gameWon && Math.random() < 0.6) {
     spawnPowerUp();
@@ -200,13 +200,13 @@ setInterval(() => {
 
 let isPointerActive = false;
 
-// Touch/mouse controls for player paddle
+
 canvas.addEventListener("pointerdown", e => {
   unlockAudio();
   isPointerActive = true;
   canvas.setPointerCapture(e.pointerId);
   
-  // Restart game if it's over
+  // restart game if it's over
   if (gameWon) {
     resetGame();
   }
@@ -218,7 +218,7 @@ canvas.addEventListener("pointermove", e => {
   const rect = canvas.getBoundingClientRect();
   player1Y = e.clientY - rect.top - paddleHeight / 2;
   
-  // Keep paddle within bounds
+  
   player1Y = Math.max(0, Math.min(H - paddleHeight, player1Y));
 });
 
@@ -227,37 +227,37 @@ canvas.addEventListener("pointerup", e => {
   canvas.releasePointerCapture(e.pointerId);
 });
 
-// Pause button handler
+
 pauseButton.addEventListener("pointerdown", e => {
   unlockAudio();
   isPaused = !isPaused;
   pauseButton.textContent = isPaused ? "Resume" : "Pause";
 });
 
-// Main game logic update
+
 function update() {
   if (isPaused || gameWon) return;
 
-  // Move ball
+  
   ballX += ballDX;
   ballY += ballDY;
 
-  // Ball collision with top/bottom walls
+  // ball collision with top/bottom walls //
   if (ballY < ballRadius || ballY > H - ballRadius) {
     ballDY *= -1;
     playHitSound();
   }
 
-  // Ball collision with player paddle (left side)
+  
   if (ballX - ballRadius < paddleWidth && ballY > player1Y && ballY < player1Y + paddleHeight) {
-    ballDX = Math.abs(ballDX) * 1.08;  // Speed up slightly
+    ballDX = Math.abs(ballDX) * 1.08;  // zoom zoom zoom! //
     ballDY = ((ballY - (player1Y + paddleHeight / 2)) / (paddleHeight / 2)) * maxSpeedY;
     playHitSound();
     shakeAmount = 6;
     flashAmount = 4;
   }
 
-  // Ball collision with AI paddle (right side)
+  // ball collision with ai paddle, right side //
   if (ballX + ballRadius > W - paddleWidth && ballY > player2Y && ballY < player2Y + paddleHeight) {
     ballDX = -Math.abs(ballDX) * 1.08;
     ballDY = ((ballY - (player2Y + paddleHeight / 2)) / (paddleHeight / 2)) * maxSpeedY;
@@ -266,7 +266,7 @@ function update() {
     flashAmount = 4;
   }
 
-  // Scoring - ballgoes off screen //
+  
   if (ballX < 0) {
     score2++;
     playScoreSound();
@@ -279,7 +279,7 @@ function update() {
     resetBall(-1);
   }
 
-  // AI paddle movement - follows ball with some offset
+  
   const aiPaddleCenter = player2Y + paddleHeight / 2;
   if (aiPaddleCenter < ballY - 25) {
     player2Y += aiSpeed;
@@ -289,13 +289,13 @@ function update() {
   
   player2Y = Math.max(0, Math.min(H - paddleHeight, player2Y));
 
-  // Check for power-up collisions
+  // check for powerup collisions //
   for (let i = powerUps.length - 1; i >= 0; i--) {
     const powerUp = powerUps[i];
     const distance = Math.hypot(ballX - powerUp.x, ballY - powerUp.y);
     
     if (distance < ballRadius + POWERUP_SIZE / 2) {
-      // Apply power-up effect
+      // apply powerup effect //
       if (powerUp.type === "grow") {
         paddleHeight *= 1.25;
       }
@@ -312,17 +312,16 @@ function update() {
     }
   }
 
-  // Check win condition
+  // score again //
   if (score1 >= WINNING_SCORE || score2 >= WINNING_SCORE) {
     gameWon = true;
   }
 }
 
-// Render everything to the canvas
 function draw() {
   ctx.save();
   
-  // Screen shake effect when ball hits paddle :3 //
+  // screen shake effect when ball hits paddle :3 //
   if (shakeAmount) {
     ctx.translate(
       (Math.random() - 0.5) * shakeAmount,
@@ -333,14 +332,14 @@ function draw() {
   
   ctx.clearRect(0, 0, W, H);
 
-  // Flash effect on paddle hit //
+  // flash effect on paddle hit //
   if (flashAmount) {
     ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
     ctx.fillRect(0, 0, W, H);
     flashAmount--;
   }
 
-  // Draw ball with glow effect //
+  // draw ball with glow effect //
   ctx.fillStyle = "#4caf50";
   ctx.shadowBlur = 15;
   ctx.shadowColor = "#4caf50";
@@ -349,12 +348,12 @@ function draw() {
   ctx.fill();
   ctx.shadowBlur = 0;
 
-  // Draw paddles
+  // draw paddles //
   ctx.fillStyle = "#fff";
   ctx.fillRect(0, player1Y, paddleWidth, paddleHeight);
   ctx.fillRect(W - paddleWidth, player2Y, paddleWidth, paddleHeight);
 
-  // Draw power-ups
+  // draw powerups //
   for (const powerUp of powerUps) {
     if (powerUp.type === "grow") {
       ctx.fillStyle = "#00e5ff";
@@ -369,13 +368,13 @@ function draw() {
     ctx.fill();
   }
 
-  // Draw scores
+  // draw scores //
   ctx.font = `${H * 0.08}px Arial`;
   ctx.fillStyle = "#4caf50";
   ctx.fillText(score1, W * 0.25, H * 0.1);
   ctx.fillText(score2, W * 0.75, H * 0.1);
 
-  // Game over screen
+  // game over screen //
   if (gameWon) {
     ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
     ctx.fillRect(0, 0, W, H);
@@ -391,7 +390,6 @@ function draw() {
   ctx.restore();
 }
 
-// Main game loop - runs every frame
 function gameLoop() {
   update();
   draw();
