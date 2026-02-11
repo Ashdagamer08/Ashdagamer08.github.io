@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ash, tinkerer & student</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            padding-top: 88px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #e0e0ff;
+            background: #0a0015;
+            overflow-x: hidden;
+        }
+
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 0, 21, 0.65);
+            z-index: -1;
+        }
+
+        header {
+            background: linear-gradient(to bottom, rgba(30, 0, 60, 0.9), transparent);
+            padding: 1.5rem 5%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 10;
+            backdrop-filter: blur(8px);
+        }
+
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #a78bfa;
+            text-shadow: 0 0 10px #a78bfa;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 2.5rem;
+        }
+
+        nav ul li a {
+            color: #d1d5ff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #a78bfa;
+            text-shadow: 0 0 8px #a78bfa;
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 5%;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            margin-bottom: 1rem;
+            color: #c4b5fd;
+            text-shadow: 0 0 20px #7c3aed;
+        }
+
+        .hero p {
+            font-size: 1.6rem;
+            max-width: 800px;
+            margin-bottom: 2rem;
+            color: #d1d5ff;
+        }
+
+        section {
+            padding: 8rem 5%;
+            scroll-margin-top: 96px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            color: #a78bfa;
+            text-align: center;
+            text-shadow: 0 0 15px #7c3aed;
+        }
+
+        .bio-content {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .photo-container {
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .photo-container img {
+            width: 320px;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(167, 139, 250, 0.5);
+            border: 2px solid #7c3aed;
+        }
+
+        .interests {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .interest-card {
+            background: rgba(30, 20, 60, 0.6);
+            padding: 2rem;
+            border-radius: 12px;
+            width: 300px;
+            text-align: center;
+            border: 1px solid #7c3aed;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .interest-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(124, 58, 237, 0.4);
+        }
+
+        footer {
+            background: rgba(20, 10, 40, 0.9);
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.95rem;
+            color: #b0b0ff;
+            border-top: 1px solid #4c1d95;
+        }
+
+        .music-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(30, 0, 60, 0.7);
+            padding: 10px 15px;
+            border-radius: 12px;
+            border: 1px solid #7c3aed;
+            backdrop-filter: blur(6px);
+        }
+
+        .music-label {
+            color: #d1d5ff;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+
+        .music-player iframe {
+            border: none;
+        }
+
+        #start-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 0, 21, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            color: #c4b5fd;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        #start-overlay h2 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 20px #7c3aed;
+        }
+
+        #start-overlay p {
+            font-size: 1.4rem;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="particles"></canvas>
+    <div class="overlay"></div>
+
+    <div id="start-overlay">
+        <h2>Welcome, I’m Ash</h2>
+        <p>Click anywhere to come in. I’ll start the soundtrack for you.</p>
+    </div>
+
+    <div class="music-player">
+        <audio id="bg-audio" src="REPULSIVE%20-%200000%27.mp3" loop preload="none" controls></audio>
+    </div>
+
+    <header>
+        <div class="nav-bar">
+            <div class="logo">Ash, tinkerer</div>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#interests">Stuff I Care About</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero" id="home">
+        <h1>Ash</h1>
+        <p>Hey, I’m Ash. I tinker with hardware, write code, and learn by building. I run Omarchy Linux (DHH’s opinionated, developer focused distro) and I’m usually juggling experiments and school projects.</p>
+    </section>
+
+    <section id="about">
+        <h2>About</h2>
+        <div class="bio-content">
+            <div class="photo-container">
+                    <img src="rn_image_picker_lib_temp_6c79f726-5d33-4526-a507-2a9de5c38400.png" alt="Photo of Ash (blue lighting)" onerror="this.style.opacity=0.6;this.nextElementSibling.style.display='block'">
+                    <div style="display:none;color:#9aa0ff;margin-top:0.75rem">No profile image? Drop a file named <strong>photo.jpg</strong> here and refresh the page.</div>
+                </div>
+            <p>
+                    I’m into open source and hands on hardware. Omarchy gives me a dev friendly default setup, and I’ve been using it while I experiment, code, and tackle school work for the past few months. I like keeping things minimal so I can tweak what matters.
+                </p>
+                <p>
+                    My ThinkPad is my daily driver, reliable and perfect for trying out new setups or grinding through a project.
+                </p>
+        </div>
+    </section>
+
+    <section id="interests">
+        <h2>Stuff I care about</h2>
+        <div class="interests">
+            <div class="interest-card">
+                <h3>Omarchy Linux</h3>
+                <p>I tune config and dotfiles to my liking.</p>
+            </div>
+            <div class="interest-card">
+                <h3>ThinkPad Hardware</h3>
+                <p>Repairing, upgrading,and squeezing more life and performance from older laptops.</p>
+            </div>
+            <div class="interest-card">
+                <h3>Tech Tinkering</h3>
+                <p>Kernels, window managers (i3/Hyprland), scripts, I tinker to learn and to fix things I find annoying.</p>
+            </div>
+        </div>
+    </section>
+
+    
+
+    <script>
+        // Hide start overlay on click and start local audio (user gesture)
+        const overlay = document.getElementById('start-overlay');
+        const audio = document.getElementById('bg-audio');
+        overlay.addEventListener('click', () => {
+            overlay.style.display = 'none';
+            if (audio) {
+                audio.volume = 0.5;
+                audio.play().catch(e => console.log('Audio play prevented:', e));
+            }
+        });
+
+        // Particle background (sci-fi style)
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        const particlesArray = [];
+        const numberOfParticles = 120;
+        const mouse = { x: null, y: null };
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = Math.random() * 1.5 - 0.75;
+                this.speedY = Math.random() * 1.5 - 0.75;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+                if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(167, 139, 250, 0.8)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        function connectParticles() {
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a; b < particlesArray.length; b++) {
+                    const dx = particlesArray[a].x - particlesArray[b].x;
+                    const dy = particlesArray[a].y - particlesArray[b].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 120) {
+                        ctx.strokeStyle = `rgba(124, 58, 237, ${1 - distance / 120})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particlesArray.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            connectParticles();
+            requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+    </script>
+
+</body>
+</html>
